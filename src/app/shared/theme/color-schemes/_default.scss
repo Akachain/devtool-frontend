@@ -1,0 +1,49 @@
+@import '../mixin';
+$default-text:14px;
+$sm-text:14px;
+$lg-text:16px;
+$body-bg:#fff;
+$sidebar-bg:#1f263e;
+$sidebar-fonts-color: #1f263e;
+$card-bg:#fff;
+$card-border:#e4e3e3;
+$white:#fff;
+$black:#000;
+$border-color:rgba($black, .1);
+$table-border-color:#e6e6e6;
+$fonts-color:#26253c;
+$primary:#fca400;
+$success:#16be9a;
+$danger:#fa5167;
+$warning:#ff7403;
+$info:#2cc3ff;
+$button:#1a73e8;
+body {
+    background: $body-bg;
+    font-size: $default-text;
+    line-height: 1.5;
+}
+
+.bg-default {
+    @include linear-gradient(to top right, darken($card-bg, 40%), darken($card-bg, 30%));
+}
+
+.bg-primary {
+    @include linear-gradient(to top right, $button, $button);
+}
+
+.bg-success {
+    @include linear-gradient(to top right, $success, #42e697);
+}
+
+.bg-danger {
+    @include linear-gradient(to top right, $danger, #fda09c);
+}
+
+.bg-warning {
+    @include linear-gradient(to top right, $warning, #fac980);
+}
+
+.bg-info {
+    @include linear-gradient(to top right, $info, #15f8bf);
+}

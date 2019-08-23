@@ -1,0 +1,95 @@
+<div class="pages-top">
+  <!-- <div class="avatar-wrap">
+    <a class="avatar" href="https://accounts.akachain.io">
+      <img src="{{avatarImgSrc}}" alt="avatar">
+    </a>
+    <div class="user-info-wrap">
+      <a *ngIf="accountType === 'community'" class="user-name" title="{{userName}}"
+        href="https://accounts.akachain.io">{{userName}}</a>
+      <a *ngIf="accountType ==='organization'" class="user-name" title="{{organizationName}}"
+        href="https://accounts.akachain.io">{{organizationName}}</a>
+      <a class="user-post" title="{{eMail}}" href="https://accounts.akachain.io">{{eMail}}</a>
+    </div>
+  </div> -->
+
+  <div class="collapse-menu" (click)="_sidebarToggle()">
+    <!-- <i class="fa fa-navicon fa-fw" [ngClass]="{'toggle-on':sidebarToggle,'toggle-off':!sidebarToggle}"></i> -->
+    <i class="fa fa-dedent fa-fw" *ngIf="sidebarToggle"></i>
+    <i class="fa fa-indent fa-fw" *ngIf="!sidebarToggle"></i>
+  </div>
+
+  <div class="akachain-Notifications">
+    <div>
+      <div class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-bell"></i>
+          <b class="caret hidden-sm hidden"></b>
+          <span *ngIf="unreadNotifications!==0" class="notification hidden-sm hidden-xs">{{unreadNotifications}}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li *ngFor="let notification of notificationArr" [ngClass]="{'unRead': notification.unRead === true}">
+            <div class="notification-item" (click)="readNo(notification.Id,notification.Detail)">
+              <p>
+                {{notification.Detail}}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="search-group">
+    <input type="text" class="search-input" placeholder="Search project · · ·">
+    <button class="search-btn">
+      <i class="fa fa-search fa-fw"></i>
+    </button>
+  </div> -->
+
+  <!-- <div class="akachain-wrap-sign-out"> -->
+    <!-- <div class="logo">
+      <img src="assets/images/logo-full-white2x.png" alt="logo-akachain">
+    </div> -->
+    <!-- <i class="fa fa-sign-out" aria-hidden="true"></i>
+    <a class="text-top" (click)="signOut()">Sign out</a>
+  </div> -->
+
+  <div class="akachain-wrap-help">
+    <!-- <div class="logo">
+        <img src="assets/images/logo-full-white2x.png" alt="logo-akachain">
+      </div> -->
+    <i class="fa fa-question-circle" aria-hidden="true"></i>
+    <a class="text-top" routerLink='/pages/document'>Help</a>
+  </div>
+
+  <!-- <div class="msg-tips-wrap">
+    <div class="msg-entrance ring">
+      <span class="fa fa-bell fa-fw"></span>
+      <span class="badge" *ngIf="tip.ring"></span>
+    </div>
+    <div class="msg-entrance email">
+      <span class="fa fa-envelope fa-fw"></span>
+      <span class="badge" *ngIf="tip.email"></span>
+    </div>
+  </div> -->
+
+</div>
+
+
+<!-- Button trigger modal -->
+<button type="button" id="openModalButton" [hidden]="true" class="btn btn-primary" data-toggle="modal" data-target="#notifiModal">
+  
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="notifiModal" tabindex="-1" role="dialog" aria-labelledby="notifiModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        {{Detail}}
+        <div class="mt-3 d-flex flex-row-reverse">
+          <button  type="button"  class="btn btn-primary" data-dismiss="modal" (click) = "onClose()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
