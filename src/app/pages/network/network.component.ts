@@ -26,6 +26,7 @@ export class NetworkComponent implements OnInit {
   formDisabled: Boolean = false;
   getNetwork: any;
   networkData: Array<any> = [];
+  submitted = false;
 
   /* pagination Info */
   pageSize = 10;
@@ -46,11 +47,11 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.networkForm = new FormGroup({
-      fabricVersion: new FormControl(),
-      networkName: new FormControl(),
-      channelName: new FormControl(),
-      orgName1: new FormControl(),
-      orgName2: new FormControl(),
+      fabricVersion: new FormControl('', Validators.required),
+      networkName: new FormControl('', Validators.required),
+      channelName: new FormControl('', Validators.required),
+      orgName1: new FormControl('', Validators.required),
+      orgName2: new FormControl('', Validators.required),
     });
 
     this.listNetwork()
@@ -75,6 +76,10 @@ export class NetworkComponent implements OnInit {
   }
 
   addNetwork() {
+    this.submitted = true;
+    if (this.networkForm.invalid) {
+      return;
+    }
     this.formDisabled = true;
     const payload = {
       name: this.networkForm.value.networkName,
@@ -94,6 +99,8 @@ export class NetworkComponent implements OnInit {
         this.formDisabled = false;
       })
   }
+
+  get f() { return this.networkForm.controls; }
 
   pageChanged(pN: number): void {
     this.pageNumber = pN;
