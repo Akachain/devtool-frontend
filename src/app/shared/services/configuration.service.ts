@@ -5,7 +5,7 @@ export class Configuration {
   //staging
     public RedirectUrl = 'http://localhost:4200/login';
     public CallBackUrl = 'http://localhost:4500';
-    public ApiIPOff = 'http://localhost:3000';
+    public ApiIPOff = 'http://localhost:44080';
 
   public description = 'Development Tool';
   public ApiUrlOff = '/api/';
