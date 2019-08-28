@@ -22,5 +22,5 @@ RUN ls /data/app/dist/akachain-development-tool
 FROM nginx:1.15
 RUN mkdir -p /nginx/conf/
 RUN mkdir -p /var/www/akachain-development-tool
-COPY --from=build-stage /data/app/nginx/prod-nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /data/app/nginx/local-nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-stage /data/app/dist/akachain-development-tool /var/www/akachain-development-tool
