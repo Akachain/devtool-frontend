@@ -68,7 +68,7 @@ export class NetworkComponent implements OnInit {
     this.dbOffSvc.listNetwork('network/getAll').toPromise()
     .then(res => {
       this.networkData = res.data;
-      if (this.networkData) this.formDisabled = true;
+      if (this.networkData.length > 0) this.formDisabled = true;
       this.showSuccess('Refreshing network...')
     })
     .catch(err => {
