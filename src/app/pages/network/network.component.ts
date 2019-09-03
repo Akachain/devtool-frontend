@@ -47,7 +47,7 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.networkForm = new FormGroup({
-      fabricVersion: new FormControl('', Validators.required),
+      fabricVersion: new FormControl('1.4.1', Validators.required),
       networkName: new FormControl('', Validators.required),
       channelName: new FormControl('', Validators.required),
       orgName1: new FormControl('', Validators.required),
