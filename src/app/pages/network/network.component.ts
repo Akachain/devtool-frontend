@@ -54,8 +54,8 @@ export class NetworkComponent implements OnInit {
       orgName2: new FormControl('', Validators.required),
     });
 
-    this.listNetwork()
-    this.getNetwork = setInterval(() => this.listNetwork(), 30000);
+    this.listNetwork();
+    // this.getNetwork = setInterval(() => this.listNetwork(), 30000);
   }
 
   ngOnDestroy() {
@@ -68,6 +68,7 @@ export class NetworkComponent implements OnInit {
     this.dbOffSvc.listNetwork('network/getAll').toPromise()
     .then(res => {
       this.networkData = res.data;
+      if (this.networkData) this.formDisabled = true;
       this.showSuccess('Refreshing network...')
     })
     .catch(err => {
@@ -92,11 +93,11 @@ export class NetworkComponent implements OnInit {
     this.dbOffSvc.createNetwork('network/create', payload).toPromise()
       .then(res => {
         this.showSuccess(res.message)
-        this.formDisabled = false;
+        this.listNetwork();
       })
       .catch(err => {
         this.showError(err.message)
-        this.formDisabled = false;
+        this.listNetwork();
       })
   }
 
