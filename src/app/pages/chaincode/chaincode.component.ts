@@ -77,7 +77,7 @@ export class ChaincodeComponent implements OnInit {
 
   loadData() {
     this.spinner.show();
-    this.dbOffSvc.requestChaincode('getAll', {}).toPromise().then(response => {
+    this.dbOffSvc.getAllChaincode('getAll').toPromise().then(response => {
       if (response.result === 200) {
         this.tableData = response.data;
         this.spinner.hide();

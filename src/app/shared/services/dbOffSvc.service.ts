@@ -39,6 +39,10 @@ export class DbOffService {
     return this._http.get(this.actionUrl + ns, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
+  getAllChaincode(ns: string): Observable<any> {
+    return this._http.get(this.actionUrl + 'chaincode/' + ns, { headers: this.headers }).pipe(map((response: Response) => response.json()));
+  }
+
   // POST API
   post(ns: string, data: any): Observable<any> {
     return this._http.post(this.actionUrl + ns, data, { headers: this.headers }).pipe(map((response: Response) => response.json()));
