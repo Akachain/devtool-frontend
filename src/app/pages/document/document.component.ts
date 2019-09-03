@@ -8,18 +8,26 @@ import { Component, OnInit } from '@angular/core';
 export class DocumentComponent implements OnInit {
 
   urlDeploy = 'https://akc-assets.s3-ap-southeast-1.amazonaws.com/documents/Akachain_Deployment_guideline.pdf';
-	urlChaincode = 'https://akc-assets.s3-ap-southeast-1.amazonaws.com/documents/AKC_Chaincode_guideline.pdf';
+  urlChaincode = 'https://akc-assets.s3-ap-southeast-1.amazonaws.com/documents/AKC_Chaincode_guideline.pdf';
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  downloadDGl(){
+  downloadDGl() {
     window.open(this.urlDeploy);
   }
-  
-  downloadCGl(){
+
+  downloadCGl() {
     window.open(this.urlChaincode);
+  }
+
+  onLoad(e) {
+
+  }
+
+  onError(e) {
+
   }
 }

@@ -7,6 +7,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     imports: [
@@ -17,8 +18,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
         FormsModule,
         ReactiveFormsModule,
         ModalModule,
-        NgxSpinnerModule
-
+        NgxSpinnerModule,
+        MarkdownModule.forChild()
     ],
     declarations: [
       DocumentComponent
