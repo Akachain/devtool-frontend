@@ -1,0 +1,203 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.2)" size="medium" color="#2d4bf6" type="ball-clip-rotate-pulse"></ngx-spinner>
+<div class="row">
+  <div class="col-md-12">
+    <card cardTitle="Chaincode">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>CHAINCODE ID</th>
+            <th>NAME</th>
+            <th>LANGUAGE</th>
+            <th>USED INVOKE REQUEST</th>
+            <th>MAX INVOKE REQUEST</th>
+            <th>INIT STATUS</th>
+            <th>UPGRADE STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData">
+            <td>{{item.ChaincodeId}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Language}}</td>
+            <td>{{item.UsedInvokeRequest}}</td>
+            <td>{{item.MaxInvokeRequest}}</td>
+            <td>
+              <label [ngClass]="{fail:'label-danger',success:'label-success',pending:'label-warning'}[item.InitStatus]">
+                {{item.InitStatus}}
+              </label>
+            </td>
+            <td>
+              <label
+                [ngClass]="{fail:'label-danger',success:'label-success',pending:'label-warning'}[item.UpgradeStatus]">
+                {{item.UpgradeStatus}}
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </card>
+  </div>
+</div>
+
+<div *ngIf="isSolidity">
+  <div class="">
+    <card cardTitle="Chaincode detail">
+      <pre>{{chaincodeDetail | json}}</pre>
+    </card>
+  </div>
+</div>
+
+<div *ngIf="!isSolidity">
+  <card cardTitle="Response">
+    <div class="Response-area">
+      <pre class="pre-response">{{jsonResponse | json}}</pre>
+    </div>
+  </card>
+  <!-- <div class="">
+    <card cardTitle="chaincode log">
+      <div class="chaincode-area">
+        <pre class="pre-chaincode">{{logChaincode | json}}</pre>
+      </div>
+    </card>
+  </div> -->
+
+  <div class="">
+    <card cardTitle="Chaincode Detail">
+      <tabset id="tabs3" theme="justified">
+        <tab-content for="tabs3" tabTitle="INIT" [active]="true">
+          <div class="form-group">
+            <div>
+              <pre style="font-style: italic;margin-top:10px">
+API Link : https://dev.akachain.io/api/chaincode/init
+Authorization: Bearer {{token}}
+body:
+{{bodyInit | json}}</pre>
+            </div>
+            <label class="control-label" style="margin-top: 15px">Add Parameter</label>
+            <button class="btn btn-primary " type="button" (click)="addFieldInit()"
+              style="margin-left:5px;font-size:13px"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="form-group" *ngFor="let field of fieldInit; let i = index">
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button (click)="deleteFieldInit(i)" type="button" class="btn btn-primary" id="basic-addon1">X</button>
+              </div>
+              <input type="text" class="form-control" placeholder="parameter {{i+1}}" name="{{field.name}}"
+                id=init{{i+1}}>
+            </div>
+          </div>
+          <div class="form-group" style="text-align: right">
+            <button class="btn btn-primary" [disabled]="isInit" (click)="init()">Submit Init</button>
+          </div>
+        </tab-content>
+        <tab-content for="tabs3" tabTitle="INVOKE">
+          <div class="form-group">
+            <div style="margin-bottom: 15px">
+              <pre style="font-style: italic;margin-top:10px">
+API Link : https://dev.akachain.io/api/chaincode/invoke
+Authorization: Bearer {{token}}
+body:
+{{bodyInvoke | json}}</pre>
+            </div>
+            <label class="control-label">Function Name</label>
+            <input type="text" id="fcnInvoke" class="form-control" placeholder="Function Name">
+          </div>
+
+          <div class="form-group">
+            <label class="control-label">Add Parameter</label>
+            <button class="btn btn-primary" type="button" (click)="addFieldInvoke()"
+              style="margin-left:5px;font-size:13px"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          </div>
+          <div class="form-group" *ngFor="let field of fieldInvoke; let i = index">
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button (click)="deleteFieldInvoke(i)" type="button" class="btn btn-primary"
+                  id="basic-addon1">X</button>
+              </div>
+              <input type="text" class="form-control" placeholder="parameter{{i+1}}" name="{{field.name}}"
+                id=invoke{{i+1}}>
+            </div>
+          </div>
+          <div class="form-group" style="text-align: right">
+            <button class="btn btn-primary" (click)="invoke()">Submit Invoke</button>
+          </div>
+        </tab-content>
+        <tab-content for="tabs3" tabTitle="QUERY">
+          <div class="form-group">
+            <div style="margin-bottom: 15px">
+              <pre style="font-style: italic;margin-top:10px">
+API Link : https://dev.akachain.io/api/chaincode/query
+Authorization: Bearer {{token}}
+body:
+{{bodyQuery | json}}</pre>
+            </div>
+            <label class="control-label">Function Name</label>
+            <input type="text" id="fcnQuery" class="form-control" placeholder="Function Name">
+          </div>
+
+          <div class="form-group">
+            <label class="control-label">Add Parameter</label>
+            <button class="btn btn-primary" type="button" (click)="addFieldQuery()"
+              style="margin-left:5px;font-size:13px"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          </div>
+
+          <div class="form-group" *ngFor="let field of fieldQuery; let i = index">
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button (click)="deleteFieldQuery(i)" type="button" class="btn btn-primary" id="basic-addon1">X</button>
+              </div>
+              <input type="text" class="form-control" placeholder="parameter{{i+1}}" name="{{field.name}}"
+                id=query{{i+1}}>
+            </div>
+          </div>
+          <div class="form-group" style="text-align: right">
+            <button class="btn btn-primary" (click)="query()">Submit Query</button>
+          </div>
+        </tab-content>
+        <tab-content for="tabs3" tabTitle="UPGRADE">
+          <div class="form-group">
+            <label>File Chaincode</label>
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" (change)="uploadFileToServer($event.target.files)"
+                  id="inputGroupFile02">
+                <label class="custom-file-label" #customLabel for="inputGroupFile02"
+                  aria-describedby="inputGroupFileAddon02">Choose file</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-xs-12">
+            <form [formGroup]="languageForm" class="col-xs-4" style="padding: 0">
+              <label>Language</label>
+              <select formControlName="languageControl" class="form-control">
+                <!-- <option [value]="language" *ngFor="let language of languages"> {{language}}</option> -->
+                <option value="golang">Golang</option>
+                <option value="node" disabled="disabled">Node JS</option>
+              </select>
+            </form>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" style="margin-top: 10px">Add Parameter</label>
+            <button class="btn btn-primary" type="button" (click)="addFieldUpgrade()"
+              style="margin-left:5px;font-size:13px"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          </div>
+
+          <div class="form-group" *ngFor="let field of fieldUpgrade; let i = index">
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button (click)="deleteFieldUpgrade(i)" type="button" class="btn btn-primary"
+                  id="basic-addon1">X</button>
+              </div>
+              <input type="text" class="form-control" placeholder="parameter {{i+1}}" name="{{field.name}}"
+                id=upgrade{{i+1}}>
+            </div>
+          </div>
+          <div class="form-group" style="text-align: right">
+            <button class="btn btn-primary" (click)="upgradeChaincode()">Upgrade Chaincode</button>
+          </div>
+        </tab-content>
+      </tabset>
+    </card>
+  </div>
+</div>

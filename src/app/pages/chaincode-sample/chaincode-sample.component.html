@@ -1,0 +1,59 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.2)" size="medium" color="#2d4bf6" type="ball-clip-rotate-pulse"></ngx-spinner>
+<div class="row">
+  <div class="col-md-12">
+    <card cardTitle="Chaincode Sample">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>CHAINCODE ID</th>
+            <th>NAME</th>
+            <!-- <th>DETAIL</th> -->
+            <th>DOWNLOAD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data | paginate: { id: 'pager', itemsPerPage: pageSize, currentPage: pageNumber};let index = index" (click)= "detail(item.Description)">
+            <td>{{item.ChaincodeId}}</td>
+            <td>{{item.Name}}</td>
+            <!-- <td> -->
+              <!-- <a class="btn btn-primary" routerLink='/pages/detailsample/{{item.ChaincodeId}}' class="">view</a> -->
+            <!-- </td> -->
+            <td>
+              <button class="btn btn-primary" style="font-size: 13px" (click)="downloadTemplate(item.Url)">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                <span> Download</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form class="pagination-wrapper">
+        <div class="form-group pages">
+          <pagination-controls class="my-pagination" id="pager" (pageChange)="pageChanged($event)" maxSize="9" directionLinks="true"
+            autoHide="true" previousLabel="Prev" nextLabel="Next" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+            screenReaderCurrentLabel="You're on page">
+          </pagination-controls>
+        </div>
+        <div class="form-group options pages">
+          <div class="input-group input-group-sm">
+            <select class="form-control" name="pageChangedName" [(ngModel)]="pageSize" (ngModelChange)="loadData()">
+              <option>1</option>
+              <option>5</option>
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+              <option>100</option>
+              <option>200</option>
+            </select>
+            <span class="input-group-addon addon-right">Per Page</span>
+          </div>
+        </div>
+      </form>
+    </card>
+  </div>
+  <div class="col-md-12">
+    <card cardTitle="Description">
+        <div [innerHTML]="description"></div>
+    </card>
+  </div>
+</div>

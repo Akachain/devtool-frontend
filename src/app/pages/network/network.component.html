@@ -1,0 +1,99 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.2)" size="medium" color="#2d4bf6" type="ball-clip-rotate-pulse"></ngx-spinner>
+
+<div class="row">
+    <div class="col-md-12">
+        <form [formGroup]="networkForm">
+            <fieldset [disabled]="formDisabled">
+                <card cardTitle="Create network">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="fabricVersion">Fabric version</label>
+                                <select class="form-control" id="fabricVersion" formControlName="fabricVersion" [ngClass]="{ 'is-invalid': submitted && f.fabricVersion.errors }">
+                                    <option>1.2</option>
+                                    <option>1.3</option>
+                                    <option>1.4</option>
+                                    <option>2.0</option>
+                                </select>
+                                <div *ngIf="submitted && f.fabricVersion.errors" class="invalid-feedback">
+                                    <div *ngIf="f.fabricVersion.errors.required">Fabric Version is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="networkName">Name</label>
+                                <input type="text" class="form-control" id="networkName" placeholder="Enter network's name" formControlName="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkName.errors }">
+                                <div *ngIf="submitted && f.networkName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.networkName.errors.required">Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="channelName">Channel Name</label>
+                                <input type="text" class="form-control" id="channelName" placeholder="Enter channel's name" formControlName="channelName" [ngClass]="{ 'is-invalid': submitted && f.channelName.errors }">
+                                <div *ngIf="submitted && f.channelName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.channelName.errors.required">Channel Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="orgName1">Organization 1 Name</label>
+                                <input type="text" class="form-control" id="orgName1" placeholder="Enter organization's name" formControlName="orgName1" [ngClass]="{ 'is-invalid': submitted && f.orgName1.errors }">
+                                <div *ngIf="submitted && f.orgName1.errors" class="invalid-feedback">
+                                    <div *ngIf="f.orgName1.errors.required">Organization 1 Name is required</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="orgName2">Organization 2 Name</label>
+                                <input type="text" class="form-control" id="orgName2" placeholder="Enter organization's name" formControlName="orgName2" [ngClass]="{ 'is-invalid': submitted && f.orgName2.errors }">
+                                <div *ngIf="submitted && f.orgName2.errors" class="invalid-feedback">
+                                    <div *ngIf="f.orgName2.errors.required">Organization 2 Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" (click)="addNetwork()">Add network</button>
+                            </div>
+                        </div>
+                    </div>
+                </card>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col-md-12">
+        <card cardTitle="Network Overview">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>NAME</th>
+                        <th>CHANNEL NAME</th>
+                        <th>ORGANIZATION NAME 1</th>
+                        <th>ORGANIZATION NAME 2</th>
+                        <th>FABRIC VERSION</th>
+                        <th>OS</th>
+                        <th>NODE VERSION</th>
+                        <th>DOCKER VERSION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of networkData | paginate: { id: 'pager', itemsPerPage: pageSize, currentPage: pageNumber};let index = index">
+                        <td>{{index+1}}</td>
+                        <td>{{item.Name}}</td>
+                        <td>{{item.ChannelName}}</td>
+                        <td>{{item.Org1Name}}</td>
+                        <td>{{item.Org2Name}}</td>
+                        <td>{{item.Version}}</td>
+                        <td>{{item.OS}}</td>
+                        <td>{{item.NodeVersion}}</td>
+                        <td>{{item.DockerVersion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </card>
+    </div>
+</div>

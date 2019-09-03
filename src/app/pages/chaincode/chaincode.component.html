@@ -1,0 +1,104 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.2)" size="medium" color="#2d4bf6" type="ball-clip-rotate-pulse"></ngx-spinner>
+<div class="row">
+  <div class="col-md-12">
+    <card cardTitle="INSTALL CHAINCODE">
+      <div class="">
+        <!-- <div class="form-group">
+          File chaincode:
+          <input type="file" name="chaincode" (change)="uploadFileToServer($event)" />
+        </div> -->
+
+        <div class="form-group">
+          <label>File Chaincode</label>
+          <div class="input-group mb-3">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" (change)="uploadFileToServer($event.target.files)"
+                id="inputGroupFile02">
+              <label class="custom-file-label" #customLabel for="inputGroupFile02"
+                aria-describedby="inputGroupFileAddon02">Choose file</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-xs-4">
+          <form [formGroup]="languageForm">
+              <label>Language</label>
+            <!-- <select formControlName="languageControl" class="form-control">
+              <option [value]="language" *ngFor="let language of languages">{{language}}</option>
+            </select> -->
+            <select formControlName="languageControl" class="form-control">
+              <option value="golang">Golang</option>
+              <option value="node" disabled>Node JS</option>
+            </select>
+          </form>
+        </div>
+        <div class="form-group col-xs-12" style="text-align: right">
+          <button class="btn btn-primary" (click)="uploadChaincode()">Upload Chaincode</button>
+        </div>
+      </div>
+    </card>
+    <card cardTitle="Response">
+      <div class="Response-area">
+        <pre class="pre-response">{{jsonResponse | json}}</pre>
+      </div>
+    </card>
+    <card cardTitle="your Chaincode">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>CHAINCODE ID</th>
+            <th>NAME</th>
+            <th>LANGUAGE</th>
+            <th>USED INVOKE REQUEST</th>
+            <th>MAX INVOKE REQUEST</th>
+            <th>INIT STATUS</th>
+            <th>DETAIL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of tableData | paginate: { id: 'pager', itemsPerPage: pageSize, currentPage: pageNumber};let index = index"
+            routerLink='/pages/detail/{{item.ChaincodeId}}'>
+            <td>{{item.ChaincodeId}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Language}}</td>
+            <td>{{item.UsedInvokeRequest}}</td>
+            <td>{{item.MaxInvokeRequest}}</td>
+            <td>
+              <span class="label" style="font-size: 13px;"
+                [ngClass]="{fail:'label-danger',success:'label-success',pending:'label-warning'}[item.InitStatus]">
+                {{item.InitStatus}}
+              </span>
+            </td>
+            <td>
+              <a routerLink='/pages/detail/{{item.ChaincodeId}}' class="">view</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form class="pagination-wrapper">
+        <div class="form-group pages">
+          <pagination-controls class="my-pagination" id="pager" (pageChange)="pageChanged($event)" maxSize="9"
+            directionLinks="true" autoHide="true" previousLabel="Prev" nextLabel="Next"
+            screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+            screenReaderCurrentLabel="You're on page">
+          </pagination-controls>
+        </div>
+        <div class="form-group options pages">
+          <div class="input-group input-group-sm">
+            <select class="form-control" name="pageChangedName" [(ngModel)]="pageSize" (ngModelChange)="loadData()">
+              <option>1</option>
+              <option>5</option>
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+              <option>100</option>
+              <option>200</option>
+            </select>
+            <span class="input-group-addon addon-right">Per Page</span>
+          </div>
+        </div>
+      </form>
+    </card>
+  </div>
+</div>
