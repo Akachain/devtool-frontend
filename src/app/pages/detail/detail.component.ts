@@ -52,6 +52,8 @@ export class DetailComponent implements OnInit, OnDestroy {
   subscriptionInit: Subscription;
 
   isInit: boolean = false;
+  networkData: any;
+  disableBtn: boolean = true;
 
 
   constructor(
@@ -74,8 +76,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       languageControl: ['golang']
     });
     this.getChaincode();
-
-    
 
     this.subscriptionUpgrade = this._socketService
     .getStatusUpgrade()
@@ -120,6 +120,15 @@ export class DetailComponent implements OnInit, OnDestroy {
         };
       }
     });
+
+    this.dbOffSvc.listNetwork('network/getAll').toPromise()
+    .then(res => {
+      this.networkData = res.data;
+      if (this.networkData.length > 0) this.disableBtn = false;
+    })
+    .catch(err => {
+      this.showError(err.message)
+    })
 
   }
 
@@ -291,10 +300,15 @@ export class DetailComponent implements OnInit, OnDestroy {
       dataUpgrade.push(param);
     }
 
-    if (this.file) {
+    if (this.file && !this.disableBtn) {
       this.spinner.show();
-      const language = this.languageForm.value.languageControl 
-      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade)).toPromise().then(response => {
+      const language = this.languageForm.value.languageControl ;
+      const networkData = {
+        name: this.networkData[0].Name,
+        orgName: [this.networkData[0].Org1Name, this.networkData[0].Org2Name],
+        channelName: this.networkData[0].ChannelName
+      }
+      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade), networkData).toPromise().then(response => {
         if (response.result == 102) {
           this.spinner.hide();
           this.jsonResponse = {

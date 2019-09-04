@@ -32,6 +32,8 @@ export class ChaincodeComponent implements OnInit {
 
   jsonResponse: any;
   token: string;
+  networkData: any;
+  disableBtn: boolean = true;
 
   constructor(
     private dbOffSvc: DbOffService,
@@ -88,8 +90,16 @@ export class ChaincodeComponent implements OnInit {
       this.spinner.hide();
       console.log(err);
       this.showError(err);
-
     });
+
+    this.dbOffSvc.listNetwork('network/getAll').toPromise()
+    .then(res => {
+      this.networkData = res.data;
+      if (this.networkData.length > 0) this.disableBtn = false;
+    })
+    .catch(err => {
+      this.showError(err.message)
+    })
   }
 
   pageChanged(pN: number): void {
@@ -103,10 +113,15 @@ export class ChaincodeComponent implements OnInit {
   }
 
   uploadChaincode() {
-    if (this.file) {
-      const language = this.languageForm.value.languageControl
+    if (this.file && !this.disableBtn) {
+      const language = this.languageForm.value.languageControl;
+      const networkData = {
+        name: this.networkData[0].Name,
+        orgName: [this.networkData[0].Org1Name, this.networkData[0].Org2Name],
+        channelName: this.networkData[0].ChannelName
+      }
       this.spinner.show();
-      this.dbOffSvc.upload('upload', this.file, language).toPromise().then(response => {
+      this.dbOffSvc.upload('upload', this.file, language, networkData).toPromise().then(response => {
         this.spinner.hide();
         this.jsonResponse = response;
         this.loadData();

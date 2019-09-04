@@ -79,20 +79,26 @@ export class DbOffService {
     return this._http.post(this.actionUrl + 'chaincodeTemplate/' + ns, data, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
-  upload(ns: string, data: any, language : string): Observable<any> {
+  upload(ns: string, data: any, language : string, networkData: any): Observable<any> {
     this.headers.delete('Content-Type');
     const formData = new FormData();
+    formData.set('name', networkData.name);
+    formData.set('orgName', networkData.orgName);
+    formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('chaincode', data, data.name);
     return this._http.post(this.actionUrl + ns, formData, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
-  upgrade(ns: string, data: any, chaincodeId: string, chaincodeVersion: string,language:string, dataUpgrade: any ): Observable<any> {
+  upgrade(ns: string, data: any, chaincodeId: string, chaincodeVersion: string,language:string, dataUpgrade: any, networkData: any): Observable<any> {
     this.headers.delete('Content-Type');
     const formData = new FormData();
     formData.set('chaincode', data, data.name);
     formData.set('chaincodeId', chaincodeId);
     formData.set('chaincodeVersion', chaincodeVersion);
+    formData.set('name', networkData.name);
+    formData.set('orgName', networkData.orgName);
+    formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('args', dataUpgrade);
 
