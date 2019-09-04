@@ -83,7 +83,8 @@ export class DbOffService {
     this.headers.delete('Content-Type');
     const formData = new FormData();
     formData.set('name', networkData.name);
-    formData.set('orgName', networkData.orgName);
+    formData.set('orgName[0]', networkData.orgName[0]);
+    formData.set('orgName[1]', networkData.orgName[1]);
     formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('chaincode', data, data.name);
@@ -97,7 +98,8 @@ export class DbOffService {
     formData.set('chaincodeId', chaincodeId);
     formData.set('chaincodeVersion', chaincodeVersion);
     formData.set('name', networkData.name);
-    formData.set('orgName', networkData.orgName);
+    formData.set('orgName[0]', networkData.orgName[0]);
+    formData.set('orgName[1]', networkData.orgName[1]);
     formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('args', dataUpgrade);
