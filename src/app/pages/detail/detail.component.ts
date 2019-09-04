@@ -221,7 +221,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       let param = (<HTMLInputElement>document.getElementById('init' + i)).value;
       dataInit.push(param);
     }
-    const data = { "chaincodeId": this.chaincodeId + '', "chaincodeVersion": this.chaincodeVersion,"language": this.chaincodeLanguage ,"args": dataInit };
+    const data = { "chaincodeId": this.chaincodeId + '', "chaincodeVersion": this.chaincodeVersion,"language": this.chaincodeLanguage ,"args": dataInit, "orgName": this.networkData.orgName[0], "channelName": this.networkData.channelName };
     this.dbOffSvc.chaincode('init', this.token, data).toPromise().then(response => {
       if (response.result == 102) {
         this.spinner.hide();
@@ -251,7 +251,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
 
     let fcn = (<HTMLInputElement>document.getElementById('fcnQuery')).value
-    const data = { "chaincodeId": this.chaincodeId + '', "fcn": fcn, "args": dataQuery };
+    const data = { "chaincodeId": this.chaincodeId + '', "fcn": fcn, "args": dataQuery, "orgName": this.networkData.orgName[0], "channelName": this.networkData.channelName };
     this.dbOffSvc.chaincode('query', this.token, data).toPromise().then(response => {
       // this.getLogChaincode();
       this.spinner.hide();
@@ -273,7 +273,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       dataInvoke.push(param);
     }
     let fcn = (<HTMLInputElement>document.getElementById('fcnInvoke')).value
-    const data = { "chaincodeId": this.chaincodeId + '', "fcn": fcn, "args": dataInvoke };
+    const data = { "chaincodeId": this.chaincodeId + '', "fcn": fcn, "args": dataInvoke, "orgName": this.networkData.orgName[0], "channelName": this.networkData.channelName };
     this.dbOffSvc.chaincode('invoke', this.token, data).toPromise().then(response => {
       this.getChaincode();
       this.spinner.hide();
