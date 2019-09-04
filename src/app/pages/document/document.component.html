@@ -2,19 +2,9 @@
 </ngx-spinner>
 <div class="row">
   <div class="document-wrap col-md-12">
-    <card cardTitle="AKACHAIN DOCUMENT">
-      <div>
-        <a (click)='downloadDGl()'>
-            Akachain_Deployment_guideline.pdf 
-        </a>
-      </div>
-      <br>
-      <div>
-        <a (click)='downloadCGl()'>
-            Akachain_Chaincode_guideline.pdf 
-        </a>
-      </div>
-    </card>
+    <div>
+      <markdown [src]="'../../../assets/docs/index.md'" (load)="onLoad($event)" (error)="onError($event)"></markdown>
+    </div>
   </div>
 </div>
 <!-- <footer>chat box</footer> -->
