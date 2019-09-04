@@ -33,7 +33,7 @@
           </form>
         </div>
         <div class="form-group col-xs-12" style="text-align: right">
-          <button class="btn btn-primary" (click)="uploadChaincode()">Upload Chaincode</button>
+          <button class="btn btn-primary" (click)="uploadChaincode()" [disabled]="disableBtn">Upload Chaincode</button>
         </div>
       </div>
     </card>
