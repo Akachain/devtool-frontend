@@ -104,10 +104,9 @@ export class NetworkComponent implements OnInit, AfterViewInit {
       .then(res => {
         this.networkData = res.data;
         if (this.networkData.length > 0) this.formDisabled = true;
-        this.showSuccess('Refreshing network...')
       })
       .catch(err => {
-        this.showError(err.message)
+        this.showError(err)
       })
   }
 
@@ -127,11 +126,10 @@ export class NetworkComponent implements OnInit, AfterViewInit {
 
     this.dbOffSvc.createNetwork('network/create', payload).toPromise()
       .then(res => {
-        this.showSuccess(res.message)
         this.listNetwork();
       })
       .catch(err => {
-        this.showError(err.message)
+        this.showError(err)
         this.listNetwork();
       })
   }

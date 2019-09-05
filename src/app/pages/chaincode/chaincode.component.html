@@ -49,8 +49,6 @@
             <th>CHAINCODE ID</th>
             <th>NAME</th>
             <th>LANGUAGE</th>
-            <th>USED INVOKE REQUEST</th>
-            <th>MAX INVOKE REQUEST</th>
             <th>INIT STATUS</th>
             <th>DETAIL</th>
           </tr>
@@ -62,8 +60,6 @@
             <td>{{item.ChaincodeId}}</td>
             <td>{{item.Name}}</td>
             <td>{{item.Language}}</td>
-            <td>{{item.UsedInvokeRequest}}</td>
-            <td>{{item.MaxInvokeRequest}}</td>
             <td>
               <span class="label" style="font-size: 13px;"
                 [ngClass]="{fail:'label-danger',success:'label-success',pending:'label-warning'}[item.InitStatus]">

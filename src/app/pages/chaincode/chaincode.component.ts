@@ -98,7 +98,7 @@ export class ChaincodeComponent implements OnInit {
       if (this.networkData.length > 0) this.disableBtn = false;
     })
     .catch(err => {
-      this.showError(err.message)
+      this.showError(err)
     })
   }
 

@@ -133,7 +133,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       }
     })
     .catch(err => {
-      this.showError(err.message)
+      this.showError(err)
     })
 
   }
