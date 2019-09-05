@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DbOffService } from '../../shared/services/dbOffSvc.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
@@ -14,9 +14,12 @@ import { SocketService } from '../../shared/services/socket.service';
   styleUrls: ['./network.component.scss'],
 
 })
-export class NetworkComponent implements OnInit {
+export class NetworkComponent implements OnInit, AfterViewInit {
   @ViewChild('customLabel')
-  customLabel: ElementRef
+  customLabel: ElementRef;
+  @ViewChild('scrollBottom') private scrollBottom: ElementRef;
+
+
 
 
   file: File;
@@ -59,11 +62,11 @@ export class NetworkComponent implements OnInit {
 
     this.listNetwork();
     // this.getNetwork = setInterval(() => this.listNetwork(), 30000);
-
     this.subscriptionLog = this._socketService
       .getLogShell()
       .subscribe((message: string) => {
         this.logChaincode = this.logChaincode + message;
+        this.scrollToBottom();
       });
 
     this.subscriptionCreate = this._socketService
@@ -72,7 +75,7 @@ export class NetworkComponent implements OnInit {
         if (message === 'succeeded') {
           this.showSuccess('create network successfully');
           this.listNetwork();
-        } else {
+        } else if (message === 'failed') {
           this.showError('create network error');
         }
       });
@@ -84,6 +87,16 @@ export class NetworkComponent implements OnInit {
     this.subscriptionLog.unsubscribe();
     clearInterval(this.getNetwork);
     this.getNetwork = 0;
+  }
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.scrollBottom.nativeElement.scrollTop = this.scrollBottom.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
   listNetwork() {

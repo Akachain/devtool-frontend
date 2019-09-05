@@ -80,17 +80,17 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.subscriptionUpgrade = this._socketService
     .getStatusUpgrade()
       .subscribe((message: string) => {
-        if (message === 'UPGRADING') {
+        if (message === 'upgrading') {
           this.getChaincode();
           this.showWarning('chaincode is upgrading...');
-        } else if (message === 'UPGRADE_SUCCEEDED') {
+        } else if (message === 'upgrade_succeeded') {
           this.getChaincode();
           this.showSuccess('chaincode upgrade succeeded');
           this.jsonResponse = {
             "result": "true",
             "message": "chaincode upgrade succeeded."
           };
-        } else {
+        } else if(message === 'upgrade_failed') {
           this.getChaincode();
           this.showError('chaincode upgrade failed');
           this.jsonResponse = {
@@ -102,16 +102,16 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.subscriptionInit = this._socketService
     .getStatusInit()
     .subscribe((message: string) => {
-      if (message === 'INITIALIZING') {
+      if (message === 'initializing') {
         this.showWarning('chaincode is initializing...');
-      } else if (message === 'INIT_SUCCEEDED') {
+      } else if (message === 'init_succeeded') {
         this.showSuccess('chaincode init succeeded');
         this.jsonResponse = {
           "result": "true",
           "message": "chaincode init succeeded."
         };
         this.getChaincode();
-      } else {
+      } else if(message === 'init_failed') {
         this.showError('chaincode init failed');
         this.getChaincode();
         this.jsonResponse = {

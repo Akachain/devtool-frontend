@@ -54,16 +54,16 @@ export class ChaincodeComponent implements OnInit {
     this.subscription = this._socketService
       .getStatusInstall()
       .subscribe((message: string) => {
-        if (message === 'INSTALLING') {
+        if (message === 'installing') {
           this.showWarning('chaincode is installing...');
-        } else if (message === 'INSTALL_SUCCEEDED') {
+        } else if (message === 'install_succeeded') {
           this.showSuccess('chaincode install succeeded');
           this.jsonResponse = {
             "result": "true",
             "message": "chaincode install succeeded."
           };
           this.loadData();
-        } else {
+        } else if( message === 'install_failed') {
           this.showError('chaincode install failed');
           this.jsonResponse = {
             "result": "true",
