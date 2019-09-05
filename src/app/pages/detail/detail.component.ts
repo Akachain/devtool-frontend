@@ -310,7 +310,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       this.spinner.show();
       const language = this.languageForm.value.languageControl ;
       this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade), this.networkData).toPromise().then(response => {
-        if (response.result == 102) {
+        if (response.result == "E008") {
           this.spinner.hide();
           this.jsonResponse = {
             "result": "true",
