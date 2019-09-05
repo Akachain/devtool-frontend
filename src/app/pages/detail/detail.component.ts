@@ -123,8 +123,14 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     this.dbOffSvc.listNetwork('network/getAll').toPromise()
     .then(res => {
-      this.networkData = res.data;
-      if (this.networkData.length > 0) this.disableBtn = false;
+      if (res.data.length > 0) {
+        this.disableBtn = false;
+        this.networkData = {
+          name: res.data[0].Name,
+          orgName: [res.data[0].Org1Name, res.data[0].Org2Name],
+          channelName: res.data[0].ChannelName
+        }
+      }
     })
     .catch(err => {
       this.showError(err.message)
@@ -303,12 +309,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     if (this.file && !this.disableBtn) {
       this.spinner.show();
       const language = this.languageForm.value.languageControl ;
-      const networkData = {
-        name: this.networkData[0].Name,
-        orgName: [this.networkData[0].Org1Name, this.networkData[0].Org2Name],
-        channelName: this.networkData[0].ChannelName
-      }
-      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade), networkData).toPromise().then(response => {
+      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade), this.networkData).toPromise().then(response => {
         if (response.result == 102) {
           this.spinner.hide();
           this.jsonResponse = {
