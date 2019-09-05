@@ -10,6 +10,6 @@ export class Configuration {
   public description = 'Development Tool';
   public ApiUrlOff = '/api/';
   public DBOffApiUrl =  this.ApiIPOff + this.ApiUrlOff;
-  public appVersion = '1.1.3';
+  public appVersion = '1.0.0';
   
 }

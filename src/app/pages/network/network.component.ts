@@ -34,6 +34,7 @@ export class NetworkComponent implements OnInit {
 
   jsonResponse: any;
   token: string;
+  logChaincode: string;
 
   constructor(
     private dbOffSvc: DbOffService,
@@ -54,8 +55,15 @@ export class NetworkComponent implements OnInit {
       orgName2: new FormControl('', Validators.required),
     });
 
-    this.listNetwork();
+    // this.listNetwork();
     // this.getNetwork = setInterval(() => this.listNetwork(), 30000);
+
+    this.subscription = this._socketService
+    .getLogShell()
+    .subscribe((message: string) => {
+    this.logChaincode = message;
+     console.log(message);
+    });
   }
 
   ngOnDestroy() {
