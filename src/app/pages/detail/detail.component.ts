@@ -141,9 +141,9 @@ export class DetailComponent implements OnInit, OnDestroy {
   getChaincode(): void {
     this.spinner.show();
     this.chaincodeId = this.route.snapshot.paramMap.get('id');
-    this.dbOffSvc.get(`chaincode/${this.chaincodeId}`).toPromise().then(response => {
+    this.dbOffSvc.get(`chaincode/getOne?id=${this.chaincodeId}`).toPromise().then(response => {
       this.spinner.hide();
-      if (response.result === 200) {
+      if (response.result === 'N001') {
         this.tableData = response.data;
         this.token = response.data[0].SecretKey;
         this.chaincodeVersion = response.data[0].Version.toFixed(2) + '';

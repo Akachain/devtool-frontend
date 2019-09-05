@@ -80,7 +80,7 @@ export class ChaincodeComponent implements OnInit {
   loadData() {
     this.spinner.show();
     this.dbOffSvc.getAllChaincode('getAll').toPromise().then(response => {
-      if (response.result === 200) {
+      if (response.result === 'N001') {
         this.tableData = response.data;
         this.spinner.hide();
       } else {
