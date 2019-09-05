@@ -21,7 +21,9 @@ export class NetworkComponent implements OnInit {
 
   file: File;
   message: string;
-  subscription: Subscription = new Subscription();
+  subscriptionCreate: Subscription = new Subscription();
+  subscriptionLog: Subscription = new Subscription();
+
   networkForm: FormGroup;
   formDisabled: Boolean = false;
   getNetwork: any;
@@ -55,33 +57,45 @@ export class NetworkComponent implements OnInit {
       orgName2: new FormControl('', Validators.required),
     });
 
-   this.listNetwork();
+    this.listNetwork();
     // this.getNetwork = setInterval(() => this.listNetwork(), 30000);
 
-    this.subscription = this._socketService
-    .getLogShell()
-    .subscribe((message: string) => {
-      this.logChaincode = this.logChaincode + '/n' + message;
-     console.log(message);
-    });
+    this.subscriptionLog = this._socketService
+      .getLogShell()
+      .subscribe((message: string) => {
+        this.logChaincode = this.logChaincode + message;
+      });
+
+    this.subscriptionCreate = this._socketService
+      .getStatusCreateNW()
+      .subscribe((message: string) => {
+        if (message === 'succeeded') {
+          this.showSuccess('create network successfully');
+          this.listNetwork();
+        } else {
+          this.showError('create network error');
+        }
+      });
+
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionCreate.unsubscribe();
+    this.subscriptionLog.unsubscribe();
     clearInterval(this.getNetwork);
     this.getNetwork = 0;
   }
 
   listNetwork() {
     this.dbOffSvc.listNetwork('network/getAll').toPromise()
-    .then(res => {
-      this.networkData = res.data;
-      if (this.networkData.length > 0) this.formDisabled = true;
-      this.showSuccess('Refreshing network...')
-    })
-    .catch(err => {
-      this.showError(err.message)
-    })
+      .then(res => {
+        this.networkData = res.data;
+        if (this.networkData.length > 0) this.formDisabled = true;
+        this.showSuccess('Refreshing network...')
+      })
+      .catch(err => {
+        this.showError(err.message)
+      })
   }
 
   addNetwork() {

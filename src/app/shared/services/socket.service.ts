@@ -47,4 +47,14 @@ export class SocketService {
             });
         });
     }
+
+    public getStatusCreateNW = () => {
+        return Observable.create((observer) => {
+            this.socket.on('create_nw', (message) => {
+                observer.next(message);
+            });
+        });
+    }
+
+    
 }
