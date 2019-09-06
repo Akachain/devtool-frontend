@@ -62,7 +62,12 @@ export class ChaincodeComponent implements OnInit {
             "result": "true",
             "message": "chaincode install succeeded."
           };
-          this.loadData();
+
+          //set timeout funciton loadData()
+          setTimeout(() => {
+            this.loadData();
+          }, 4000);
+
         } else if( message === 'install_failed') {
           this.showError('chaincode install failed');
           this.jsonResponse = {
@@ -124,7 +129,6 @@ export class ChaincodeComponent implements OnInit {
       this.dbOffSvc.upload('upload', this.file, language, networkData).toPromise().then(response => {
         this.spinner.hide();
         this.jsonResponse = response;
-        this.loadData();
       }).catch(err => {
         this.spinner.hide();
         this.message = 'Cannot connect to server';
@@ -134,7 +138,6 @@ export class ChaincodeComponent implements OnInit {
     } else {
       this.message = 'No file chosen';
       this.showWarning(this.message);
-
     }
   }
 
