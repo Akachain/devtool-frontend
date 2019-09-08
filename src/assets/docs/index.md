@@ -1,61 +1,45 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Akachain Development Tool
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
+This document guides how to use Akachain development tool (ADT)
 
-## Description
+Please flow this link to setup environment if ADT is not installed [github.com/akachain/devtool](https://github.com/Akachain/devtool)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Table of Contents
 
-```bash
-$ npm install
-```
+  - [Create network](#create-network)
+  - [Install chaincode](#install-chaincode)
+  - [Chaincode development](#chaincode-development)
+  - [Contact infomation](#contact-information)
 
-## Running the app
+## Create Network
 
-```bash
-# development
-$ npm run start
+Devtool consists of following components:
+- Blockchain network: Blockchain network is based on Hyperledger Fabric. It can be customized when created using admin tool (create network). Each blockchain network contains the following components:
+  - Peers (currently we support two peers)
+  - CA: Certificate Authority
+  - Orderer: Currently We support Solo orderer type. Raft and Kafka will be supported soon
+- Dapp template: Decentralized application template to work with blockchain (It is integrated with devtool backend)
+- Admin tool: To manage blockchain network (define network/delete network), Install/update/init/query chaincode.
+- Blockchain explorer: To explorer everything on blockchain
+- Postgres/Mysql: are databases that running on container serving devtool backend and explorer
 
-# watch mode
-$ npm run start:dev
+![](images/devtool_diagram.jpg)
 
-# production mode
-$ npm run start:prod
-```
+## Install Chaincode
+All chaincode files, libraries should be zipped to one *.zip file. To install chaincode, click the *Your chaincode* tab on the left pannel. Chose chaincode and then click the *Upload Chaincode* button. If chaincode is succesfully installed, It will be added to the chaicode list. It fail, an error message will be returned.
 
-## Test
+Chaincode must be initialized before used. To init chaincode, select chaincode in the chaincode list. When the chaincode detail page appear, click on *Init* tab, provide initial params and click *Init submit* button. The *Init status* in chaincode list indicates if the chaincode initializes success or not.
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+## Chaincode Development
+Please follow the link below to learn how to develop a chaincode 
 
-# test coverage
-$ npm run test:cov
-```
+[Akachain chaincode developement](https://akc-assets.s3-ap-southeast-1.amazonaws.com/documents/AKC_Chaincode_guideline.pdf)
 
-## Support
+[Hyperledger chaincode development](https://hyperledger-fabric.readthedocs.io/en/release-1.4/tutorials.html)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
+## Contact Information
+- Support team: [support@akchain.io](mailto:support@akachain.io)
+- Dev team: [Henry Nguyen](mailto:longnv27@fsoft.com.vn), [Eledra Nguyen](mailto:longnv35@fsoft.com.vn)
+- Website: [akachain.io](https://akachain.io)
