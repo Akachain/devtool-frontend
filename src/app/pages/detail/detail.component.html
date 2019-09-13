@@ -64,8 +64,7 @@
           <div class="form-group">
             <div>
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/init
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/init
 body:
 {{bodyInit | json}}</pre>
             </div>
@@ -90,8 +89,7 @@ body:
           <div class="form-group">
             <div style="margin-bottom: 15px">
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/invoke
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/invoke
 body:
 {{bodyInvoke | json}}</pre>
             </div>
@@ -122,8 +120,7 @@ body:
           <div class="form-group">
             <div style="margin-bottom: 15px">
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/query
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/query
 body:
 {{bodyQuery | json}}</pre>
             </div>

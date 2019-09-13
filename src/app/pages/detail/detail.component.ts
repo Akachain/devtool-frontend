@@ -1,4 +1,4 @@
-import { Component, OnInit ,OnDestroy, ViewChild, ElementRef,} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DbOffService } from '../../shared/services/dbOffSvc.service';
 import { GlobalService } from '../../shared/services/global.service';
@@ -8,6 +8,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 import { SocketService } from '../../shared/services/socket.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Configuration } from '../../shared/services/configuration.service';
 
 @Component({
   selector: 'app-detail',
@@ -18,13 +19,14 @@ export class DetailComponent implements OnInit, OnDestroy {
   @ViewChild('customLabel')
   customLabel: ElementRef
 
-  bodyInvoke: { "chaincodeId": string; "fcn": string; "args": any[]; };
+  apiUri = '';
+  bodyInvoke: {};
   bodyQuery: {};
   bodyInit: {};
   token: string;
   message: string;
   file: File;
-  
+
   tableData: Array<any> = [];
   chaincodeId: string;
   chaincodeLanguage: string = 'go';
@@ -42,7 +44,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   firstFieldName = 'First Item name';
   isEditItems: boolean;
 
-  jsonResponse :any;
+  jsonResponse: any;
   logChaincode: any;
   chaincodeDetail = {};
 
@@ -64,21 +66,34 @@ export class DetailComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private _socketService: SocketService
-
+    private _socketService: SocketService,
+    private _config: Configuration
 
   ) {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.apiUri = this._config.DBOffApiUrl;
     this.languageForm = this.fb.group({
       languageControl: ['golang']
+    });
+    await this.dbOffSvc.listNetwork('network/getAll').toPromise().then(res => {
+      if (res.data.length > 0) {
+        this.disableBtn = false;
+        this.networkData = {
+          name: res.data[0].Name,
+          orgName: [res.data[0].Org1Name, res.data[0].Org2Name],
+          channelName: res.data[0].ChannelName
+        }
+      }
+    }).catch(err => {
+      this.showError(err);
     });
     this.getChaincode();
 
     this.subscriptionUpgrade = this._socketService
-    .getStatusUpgrade()
+      .getStatusUpgrade()
       .subscribe((message: string) => {
         if (message === 'upgrading') {
           this.getChaincode();
@@ -90,7 +105,7 @@ export class DetailComponent implements OnInit, OnDestroy {
             "result": "true",
             "message": "chaincode upgrade succeeded."
           };
-        } else if(message === 'upgrade_failed') {
+        } else if (message === 'upgrade_failed') {
           this.getChaincode();
           this.showError('chaincode upgrade failed');
           this.jsonResponse = {
@@ -100,41 +115,28 @@ export class DetailComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptionInit = this._socketService
-    .getStatusInit()
-    .subscribe((message: string) => {
-      if (message === 'initializing') {
-        this.showWarning('chaincode is initializing...');
-      } else if (message === 'init_succeeded') {
-        this.showSuccess('chaincode init succeeded');
-        this.jsonResponse = {
-          "result": "true",
-          "message": "chaincode init succeeded."
-        };
-        this.getChaincode();
-      } else if(message === 'init_failed') {
-        this.showError('chaincode init failed');
-        this.getChaincode();
-        this.jsonResponse = {
-          "result": "true",
-          "message": "chaincode init failed."
-        };
-      }
-    });
-
-    this.dbOffSvc.listNetwork('network/getAll').toPromise()
-    .then(res => {
-      if (res.data.length > 0) {
-        this.disableBtn = false;
-        this.networkData = {
-          name: res.data[0].Name,
-          orgName: [res.data[0].Org1Name, res.data[0].Org2Name],
-          channelName: res.data[0].ChannelName
+      .getStatusInit()
+      .subscribe((message: string) => {
+        if (message === 'initializing') {
+          this.showWarning('chaincode is initializing...');
+        } else if (message === 'init_succeeded') {
+          this.showSuccess('chaincode init succeeded');
+          this.jsonResponse = {
+            "result": "true",
+            "message": "chaincode init succeeded."
+          };
+          this.getChaincode();
+        } else if (message === 'init_failed') {
+          this.showError('chaincode init failed');
+          this.getChaincode();
+          this.jsonResponse = {
+            "result": "true",
+            "message": "chaincode init failed."
+          };
         }
-      }
-    })
-    .catch(err => {
-      this.showError(err)
-    })
+      });
+
+
 
   }
 
@@ -150,6 +152,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.dbOffSvc.get(`chaincode/getOne?id=${this.chaincodeId}`).toPromise().then(response => {
       this.spinner.hide();
       if (response.result === 'N001') {
+        console.log(response.data[0]);
         this.tableData = response.data;
         this.token = response.data[0].SecretKey;
         this.chaincodeVersion = response.data[0].Version.toFixed(2) + '';
@@ -163,16 +166,19 @@ export class DetailComponent implements OnInit, OnDestroy {
         this.chaincodeDetail = JSON.parse(response.data[0].Description);
         this.bodyInit = {
           "chaincodeId": this.chaincodeId + '',
+          "orgName": this.networkData.orgName[0],
           "chaincodeVersion": this.chaincodeVersion,
           "args": []
         };
         this.bodyQuery = {
           "chaincodeId": this.chaincodeId + '',
+          "orgName": this.networkData.orgName[0],
           "fcn": "Your_function_name",
           "args": ["Your_args"]
         };
         this.bodyInvoke = {
           "chaincodeId": this.chaincodeId + '',
+          "orgName": this.networkData.orgName[0],
           "fcn": "Your_function_name",
           "args": ["Your_args"]
         };
@@ -227,7 +233,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       let param = (<HTMLInputElement>document.getElementById('init' + i)).value;
       dataInit.push(param);
     }
-    const data = { "chaincodeId": this.chaincodeId + '', "chaincodeVersion": this.chaincodeVersion,"language": this.chaincodeLanguage ,"args": dataInit, "orgName": this.networkData.orgName[0], "channelName": this.networkData.channelName };
+    const data = { "chaincodeId": this.chaincodeId + '', "chaincodeVersion": this.chaincodeVersion, "language": this.chaincodeLanguage, "args": dataInit, "orgName": this.networkData.orgName[0], "channelName": this.networkData.channelName };
     this.dbOffSvc.chaincode('init', this.token, data).toPromise().then(response => {
       if (response.result == 102) {
         this.spinner.hide();
@@ -293,11 +299,11 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   //upgrade function
- uploadFileToServer(files: FileList) {
-  this.customLabel.nativeElement.innerText = Array.from(files)
-    .map(f => f.name).join('');
-  this.file = files[0];
-}
+  uploadFileToServer(files: FileList) {
+    this.customLabel.nativeElement.innerText = Array.from(files)
+      .map(f => f.name).join('');
+    this.file = files[0];
+  }
 
   upgradeChaincode() {
     let dataUpgrade = [];
@@ -308,8 +314,8 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     if (this.file && !this.disableBtn) {
       this.spinner.show();
-      const language = this.languageForm.value.languageControl ;
-      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion,language, JSON.stringify(dataUpgrade), this.networkData).toPromise().then(response => {
+      const language = this.languageForm.value.languageControl;
+      this.dbOffSvc.upgrade('upload', this.file, this.chaincodeId + '', this.chaincodeVersion, language, JSON.stringify(dataUpgrade), this.networkData).toPromise().then(response => {
         if (response.result == "E008") {
           this.spinner.hide();
           this.jsonResponse = {
