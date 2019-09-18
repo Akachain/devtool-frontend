@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DbOffService } from '../../shared/services/dbOffSvc.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
@@ -14,18 +14,24 @@ import { SocketService } from '../../shared/services/socket.service';
   styleUrls: ['./network.component.scss'],
 
 })
-export class NetworkComponent implements OnInit {
+export class NetworkComponent implements OnInit, AfterViewInit {
   @ViewChild('customLabel')
-  customLabel: ElementRef
+  customLabel: ElementRef;
+  @ViewChild('scrollBottom') private scrollBottom: ElementRef;
+
+
 
 
   file: File;
   message: string;
-  subscription: Subscription = new Subscription();
+  subscriptionCreate: Subscription = new Subscription();
+  subscriptionLog: Subscription = new Subscription();
+
   networkForm: FormGroup;
   formDisabled: Boolean = false;
   getNetwork: any;
   networkData: Array<any> = [];
+  submitted = false;
 
   /* pagination Info */
   pageSize = 10;
@@ -33,6 +39,7 @@ export class NetworkComponent implements OnInit {
 
   jsonResponse: any;
   token: string;
+  logChaincode: string = '';
 
   constructor(
     private dbOffSvc: DbOffService,
@@ -46,35 +53,68 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.networkForm = new FormGroup({
-      fabricVersion: new FormControl(),
-      networkName: new FormControl(),
-      channelName: new FormControl(),
-      orgName1: new FormControl(),
-      orgName2: new FormControl(),
+      fabricVersion: new FormControl('1.4.1', Validators.required),
+      networkName: new FormControl('', Validators.required),
+      channelName: new FormControl('', Validators.required),
+      orgName1: new FormControl('', Validators.required),
+      orgName2: new FormControl('', Validators.required),
     });
 
-    this.listNetwork()
-    this.getNetwork = setInterval(() => this.listNetwork(), 30000);
+    this.listNetwork();
+    // this.getNetwork = setInterval(() => this.listNetwork(), 30000);
+    this.subscriptionLog = this._socketService
+      .getLogShell()
+      .subscribe((message: string) => {
+        this.logChaincode = this.logChaincode + message;
+        this.scrollToBottom();
+      });
+
+    this.subscriptionCreate = this._socketService
+      .getStatusCreateNW()
+      .subscribe((message: string) => {
+        if (message === 'succeeded') {
+          this.showSuccess('create network successfully');
+          this.listNetwork();
+        } else if (message === 'failed') {
+          this.showError('create network error');
+        }
+      });
+
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptionCreate.unsubscribe();
+    this.subscriptionLog.unsubscribe();
     clearInterval(this.getNetwork);
     this.getNetwork = 0;
   }
 
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.scrollBottom.nativeElement.scrollTop = this.scrollBottom.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
+
   listNetwork() {
     this.dbOffSvc.listNetwork('network/getAll').toPromise()
-    .then(res => {
-      this.networkData = res.data;
-      this.showSuccess('Refreshing network...')
-    })
-    .catch(err => {
-      this.showError(err.message)
-    })
+      .then(res => {
+        this.networkData = res.data;
+        if (this.networkData.length > 0) this.formDisabled = true;
+      })
+      .catch(err => {
+        this.showError(err)
+      })
   }
 
   addNetwork() {
+    this.submitted = true;
+    if (this.networkForm.invalid) {
+      return;
+    }
     this.formDisabled = true;
     const payload = {
       name: this.networkForm.value.networkName,
@@ -86,14 +126,15 @@ export class NetworkComponent implements OnInit {
 
     this.dbOffSvc.createNetwork('network/create', payload).toPromise()
       .then(res => {
-        this.showSuccess(res.message)
-        this.formDisabled = false;
+        this.listNetwork();
       })
       .catch(err => {
-        this.showError(err.message)
-        this.formDisabled = false;
+        this.showError(err)
+        this.listNetwork();
       })
   }
+
+  get f() { return this.networkForm.controls; }
 
   pageChanged(pN: number): void {
     this.pageNumber = pN;

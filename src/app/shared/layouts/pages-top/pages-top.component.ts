@@ -49,7 +49,7 @@ export class PagesTopComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getNotification();
+    // this.getNotification();
   }
 
   signOut() {
@@ -128,6 +128,6 @@ export class PagesTopComponent implements OnInit {
   }
 
   onClose() {
-    this.getNotification();
+    // this.getNotification();
   }
 }

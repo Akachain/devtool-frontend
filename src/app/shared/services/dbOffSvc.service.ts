@@ -39,6 +39,10 @@ export class DbOffService {
     return this._http.get(this.actionUrl + ns, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
+  getAllChaincode(ns: string): Observable<any> {
+    return this._http.get(this.actionUrl + 'chaincode/' + ns, { headers: this.headers }).pipe(map((response: Response) => response.json()));
+  }
+
   // POST API
   post(ns: string, data: any): Observable<any> {
     return this._http.post(this.actionUrl + ns, data, { headers: this.headers }).pipe(map((response: Response) => response.json()));
@@ -75,20 +79,28 @@ export class DbOffService {
     return this._http.post(this.actionUrl + 'chaincodeTemplate/' + ns, data, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
-  upload(ns: string, data: any, language : string): Observable<any> {
+  upload(ns: string, data: any, language : string, networkData: any): Observable<any> {
     this.headers.delete('Content-Type');
     const formData = new FormData();
+    formData.set('name', networkData.name);
+    formData.set('orgName[0]', networkData.orgName[0]);
+    formData.set('orgName[1]', networkData.orgName[1]);
+    formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('chaincode', data, data.name);
     return this._http.post(this.actionUrl + ns, formData, { headers: this.headers }).pipe(map((response: Response) => response.json()));
   }
 
-  upgrade(ns: string, data: any, chaincodeId: string, chaincodeVersion: string,language:string, dataUpgrade: any ): Observable<any> {
+  upgrade(ns: string, data: any, chaincodeId: string, chaincodeVersion: string,language:string, dataUpgrade: any, networkData: any): Observable<any> {
     this.headers.delete('Content-Type');
     const formData = new FormData();
     formData.set('chaincode', data, data.name);
     formData.set('chaincodeId', chaincodeId);
     formData.set('chaincodeVersion', chaincodeVersion);
+    formData.set('name', networkData.name);
+    formData.set('orgName[0]', networkData.orgName[0]);
+    formData.set('orgName[1]', networkData.orgName[1]);
+    formData.set('channelName', networkData.channelName);
     formData.set('language', language);
     formData.set('args', dataUpgrade);
 

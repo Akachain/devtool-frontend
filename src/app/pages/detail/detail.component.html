@@ -8,8 +8,6 @@
             <th>CHAINCODE ID</th>
             <th>NAME</th>
             <th>LANGUAGE</th>
-            <th>USED INVOKE REQUEST</th>
-            <th>MAX INVOKE REQUEST</th>
             <th>INIT STATUS</th>
             <th>UPGRADE STATUS</th>
           </tr>
@@ -19,8 +17,6 @@
             <td>{{item.ChaincodeId}}</td>
             <td>{{item.Name}}</td>
             <td>{{item.Language}}</td>
-            <td>{{item.UsedInvokeRequest}}</td>
-            <td>{{item.MaxInvokeRequest}}</td>
             <td>
               <label [ngClass]="{fail:'label-danger',success:'label-success',pending:'label-warning'}[item.InitStatus]">
                 {{item.InitStatus}}
@@ -68,8 +64,7 @@
           <div class="form-group">
             <div>
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/init
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/init
 body:
 {{bodyInit | json}}</pre>
             </div>
@@ -94,8 +89,7 @@ body:
           <div class="form-group">
             <div style="margin-bottom: 15px">
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/invoke
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/invoke
 body:
 {{bodyInvoke | json}}</pre>
             </div>
@@ -126,8 +120,7 @@ body:
           <div class="form-group">
             <div style="margin-bottom: 15px">
               <pre style="font-style: italic;margin-top:10px">
-API Link : https://dev.akachain.io/api/chaincode/query
-Authorization: Bearer {{token}}
+API Link : {{apiUri}}chaincode/query
 body:
 {{bodyQuery | json}}</pre>
             </div>
@@ -194,7 +187,7 @@ body:
             </div>
           </div>
           <div class="form-group" style="text-align: right">
-            <button class="btn btn-primary" (click)="upgradeChaincode()">Upgrade Chaincode</button>
+            <button class="btn btn-primary" (click)="upgradeChaincode()" [disabled]="disableBtn">Upgrade Chaincode</button>
           </div>
         </tab-content>
       </tabset>

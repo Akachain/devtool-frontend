@@ -5,7 +5,7 @@ import * as io from 'socket.io-client';
 
 export class SocketService {
 
-    private url = 'https://devtool.akachain.io';
+    private url = 'http://localhost:44080';
     private socket;
 
     constructor() {
@@ -39,4 +39,22 @@ export class SocketService {
             });
         });
     }
+
+    public getLogShell = () => {
+        return Observable.create((observer) => {
+            this.socket.on('log_sh', (message) => {
+                observer.next(message);
+            });
+        });
+    }
+
+    public getStatusCreateNW = () => {
+        return Observable.create((observer) => {
+            this.socket.on('create_nw', (message) => {
+                observer.next(message);
+            });
+        });
+    }
+
+    
 }

@@ -32,6 +32,8 @@ export class ChaincodeComponent implements OnInit {
 
   jsonResponse: any;
   token: string;
+  networkData: any;
+  disableBtn: boolean = true;
 
   constructor(
     private dbOffSvc: DbOffService,
@@ -52,16 +54,21 @@ export class ChaincodeComponent implements OnInit {
     this.subscription = this._socketService
       .getStatusInstall()
       .subscribe((message: string) => {
-        if (message === 'INSTALLING') {
+        if (message === 'installing') {
           this.showWarning('chaincode is installing...');
-        } else if (message === 'INSTALL_SUCCEEDED') {
+        } else if (message === 'install_succeeded') {
           this.showSuccess('chaincode install succeeded');
           this.jsonResponse = {
             "result": "true",
             "message": "chaincode install succeeded."
           };
-          this.loadData();
-        } else {
+
+          //set timeout funciton loadData()
+          setTimeout(() => {
+            this.loadData();
+          }, 4000);
+
+        } else if( message === 'install_failed') {
           this.showError('chaincode install failed');
           this.jsonResponse = {
             "result": "true",
@@ -77,8 +84,8 @@ export class ChaincodeComponent implements OnInit {
 
   loadData() {
     this.spinner.show();
-    this.dbOffSvc.requestChaincode('view', {}).toPromise().then(response => {
-      if (response.result === 200) {
+    this.dbOffSvc.getAllChaincode('getAll').toPromise().then(response => {
+      if (response.result === 'N001') {
         this.tableData = response.data;
         this.spinner.hide();
       } else {
@@ -88,8 +95,16 @@ export class ChaincodeComponent implements OnInit {
       this.spinner.hide();
       console.log(err);
       this.showError(err);
-
     });
+
+    this.dbOffSvc.listNetwork('network/getAll').toPromise()
+    .then(res => {
+      this.networkData = res.data;
+      if (this.networkData.length > 0) this.disableBtn = false;
+    })
+    .catch(err => {
+      this.showError(err)
+    })
   }
 
   pageChanged(pN: number): void {
@@ -103,13 +118,17 @@ export class ChaincodeComponent implements OnInit {
   }
 
   uploadChaincode() {
-    if (this.file) {
-      const language = this.languageForm.value.languageControl
+    if (this.file && !this.disableBtn) {
+      const language = this.languageForm.value.languageControl;
+      const networkData = {
+        name: this.networkData[0].Name,
+        orgName: [this.networkData[0].Org1Name, this.networkData[0].Org2Name],
+        channelName: this.networkData[0].ChannelName
+      }
       this.spinner.show();
-      this.dbOffSvc.upload('upload', this.file, language).toPromise().then(response => {
+      this.dbOffSvc.upload('upload', this.file, language, networkData).toPromise().then(response => {
         this.spinner.hide();
         this.jsonResponse = response;
-        this.loadData();
       }).catch(err => {
         this.spinner.hide();
         this.message = 'Cannot connect to server';
@@ -119,7 +138,6 @@ export class ChaincodeComponent implements OnInit {
     } else {
       this.message = 'No file chosen';
       this.showWarning(this.message);
-
     }
   }
 
