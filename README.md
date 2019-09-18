@@ -1,6 +1,6 @@
 
 # Akachain devtool frontend
-This is frontend for Akachain development tool. Detail description can be found here [devool](https://github.com/Akachain/devtool)
+This is frontend for Akachain development tool. Detail description can be found here [devtool](https://github.com/Akachain/devtool)
 
 # Getting started
 1. Install packages: `npm install`
